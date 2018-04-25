@@ -6,6 +6,19 @@
   <session-factory>
     <property name="connection.url"/>
     <property name="connection.driver_class"/>
+    <mapping class="by.megumin.entity.orderEntity.OrderContent"/>
+    <mapping class="by.megumin.entity.orderEntity.PaymentDetails"/>
+    <mapping class="by.megumin.entity.orderEntity.Cart"/>
+    <mapping class="by.megumin.entity.orderEntity.Order"/>
+    <mapping class="by.megumin.entity.orderEntity.OrderDetail"/>
+    <mapping class="by.megumin.entity.userEntity.User"/>
+    <mapping class="by.megumin.entity.userEntity.Profile"/>
+    <mapping class="by.megumin.entity.productEntity.Category"/>
+    <mapping class="by.megumin.entity.productEntity.Characteristic"/>
+    <mapping class="by.megumin.entity.productEntity.Detail"/>
+    <mapping class="by.megumin.entity.otherEntity.Address"/>
+    <mapping class="by.megumin.entity.otherEntity.Review"/>
+    <mapping class="by.megumin.entity.productEntity.Product"/>
     <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 

@@ -36,6 +36,22 @@
                                 <div class="col-lg-3 col-lg-offset-7">
                                     <div class="col lg-12" style="margin-top: 20px">
                                         <div class="row">
+                                            <h2 th:text="#{payment_plan.title}"></h2>
+                                            <select size="2" name="payment_plan" id="payment_plan">
+                                                <option th:value="ONE_TIME" th:text="#{payment_plan.one_time}"></option>
+                                                <option th:value="INSTALLMENT_PLAN"
+                                                        th:text="#{payment_plan.installment}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <h2 th:text="#{payment_plan.term}"></h2>
+                                            <select size="2" name="term" id="term">
+                                                <option th:value="2">2</option>
+                                                <option th:value="4">4</option>
+                                                <option th:value="6">6</option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
                                             <select size="1" name="amount" th:id="'amount' + ${cart.product.id}"
                                                     style="width: 160px">
                                                 <option th:each="i : ${#numbers.sequence(1, cart.amount)}"
@@ -62,12 +78,24 @@
 
                 <div class="row" style="margin-top: 20px">
                     <div class="col-lg-1 col-lg-offset-4"></div>
-                    <a th:href="@{/user/create-order}" class="btn btn-success"><span
-                            class="glyphicon glyphicon-shopping-cart"></span> <span th:text="#{cart.checkout}">Checkout</span></a>
-                    <a th:href="@{/user/cart/clean}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> <span th:text="#{cart.clear}">Clear the whole cart</span></a>
+                    <a onclick="createOrder()" class="btn btn-success"><span
+                            class="glyphicon glyphicon-shopping-cart"></span> <span
+                            th:text="#{cart.checkout}">Checkout</span></a>
+                    <a th:href="@{/user/cart/clean}" class="btn btn-danger"><span
+                            class="glyphicon glyphicon-trash"></span> <span
+                            th:text="#{cart.clear}">Clear the whole cart</span></a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    var term = document.getElementById('term');
+    var paymentPlan = document.getElementById('payment_plan');
+    function createOrder() {
+        var termValue = term.options[term.selectedIndex].value;
+        var planValue = paymentPlan.options[term.selectedIndex].value;
+        window.location.replace('http://localhost:8080/user/create-order?term=' + termValue + '&plan=' + planValue);
+    }
+</script>
 </body>

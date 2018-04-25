@@ -1,9 +1,6 @@
 package by.megumin.util;
 
-import by.megumin.entity.orderEntity.Cart;
-import by.megumin.entity.orderEntity.Order;
-import by.megumin.entity.orderEntity.OrderContent;
-import by.megumin.entity.orderEntity.OrderDetail;
+import by.megumin.entity.orderEntity.*;
 import by.megumin.entity.otherEntity.Address;
 import by.megumin.entity.otherEntity.Review;
 import by.megumin.entity.productEntity.Category;
@@ -61,6 +58,8 @@ public class DataImporterImpl implements DataImporter {
 
         Order order = saveOrder(session, user);
 
+        PaymentDetails paymentDetails = savePaymentDetails(session, new PaymentDetails(PaymentType.ONE_TIME));
+
         saveCharacteristic(session, xiaomi, yearOfIssue, "2017");
         saveCharacteristic(session, xiaomi, country, "Китай");
         saveCharacteristic(session, xiaomi, battery, "2000");
@@ -75,7 +74,7 @@ public class DataImporterImpl implements DataImporter {
         saveCart(session, user, samsungTv, 2);
         saveCart(session, user, xiaomi, 2);
 
-        OrderContent orderContent = saveOrderContent(session, order, xiaomi);
+        OrderContent orderContent = saveOrderContent(session, order, xiaomi, paymentDetails);
         Profile profile = saveProfile(session, user);
 
     }
@@ -90,6 +89,11 @@ public class DataImporterImpl implements DataImporter {
     private void saveCart(Session session, User user, Product product, Integer amount) {
         Cart cart = new Cart(user, product, amount);
         session.save(cart);
+    }
+
+    private PaymentDetails savePaymentDetails(Session session, PaymentDetails paymentDetails) {
+        session.save(paymentDetails);
+        return paymentDetails;
     }
 
     private void saveCharacteristic(Session session,  Product product, Detail detail, String value) {
@@ -141,8 +145,8 @@ public class DataImporterImpl implements DataImporter {
         return user;
     }
 
-    private OrderContent saveOrderContent(Session session, Order order, Product product) {
-        OrderContent orderContent = new OrderContent(product, 2, order);
+    private OrderContent saveOrderContent(Session session, Order order, Product product, PaymentDetails paymentDetails) {
+        OrderContent orderContent = new OrderContent(product, 2, paymentDetails, order);
         session.save(orderContent);
         return orderContent;
     }

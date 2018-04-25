@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{user.seeProfile}"></title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <p th:text="${user.name}"></p>
+        <p th:text="${user.surname}"></p>
+        <p th:text="${user.login}"></p>
+        <p th:text="${user.role}"></p>
+    </div>
+</div>
+</body>

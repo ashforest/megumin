@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body>
+<p th:text="#{admin}"></p>
+<a th:href="@{/user/getAll}" th:text="#{admin.getAllUsers}"></a><br>
+</body>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <title>Main title</title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:each="detail : ${details}">
+            <p th:text="${detail.name}"></p>
+
+        </div>
+
+    </div>
+</div>
+</body>
+
+<div th:each="chracteristic : ${characteristics}">
+    <p th:text="${chracteristic.detail.name} + ': ' + ${chracteristic.value}"></p>
+</div>

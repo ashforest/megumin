@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <title th:unless="${category}" th:text="#{main.page}">Megumin — online computer store in Minsk</title>
+    <title th:if="${category}" th:text="${category.name}"></title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"/>
+<div class="myContent">
+    <div class="productContent">
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <div th:unless="${category}" id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <a href="/category/1"><img th:src="@{'/resources/images/Telephones.jpg'}"></a>
+                    <div class="carousel-caption">
+                        <h2 th:text="#{category.phones}">Smartphones</h2>
+                    </div>
+                </div>
+                <div class="item">
+                    <a href="/category/2"><img th:src="@{'/resources/images/TVs.jpg'}"></a>
+                    <div class="carousel-caption">
+                        <h2 th:text="#{category.tvs}">TVs</h2>
+                    </div>
+                </div>
+                <div class="item">
+                    <a href="/category/1"><img th:src="@{'/resources/images/Laptops.jpg'}"></a>
+                    <div class="carousel-caption">
+                        <h2 th:text="#{category.laptops}">Laptops</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <div th:if="${category}">
+            <div class="container-fluid">
+                <div class="col-lg-3 bs-col">
+                    <div class="col-lg-10">
+                        <form>
+                            <div th:each="detail:${details}">
+                                <div th:if="${detail.name.equals('Год выпуска')}">
+                                    <div th:insert="~{fragments-characteristic :: year}"/>
+                                </div>
+                            </div>
+
+                            <div th:each="detail:${details}">
+                                <div th:if="${detail.name.equals('Производитель')}">
+                                    <div th:insert="~{fragments-characteristic :: producer}"/>
+                                </div>
+                            </div>
+
+                            <div th:insert="~{fragments-characteristic :: price}"/>
+
+                            <div th:each="detail:${details}">
+                                <div th:if="${detail.name.equals('Операционная система')}">
+                                    <div th:insert="~{fragments-characteristic :: OS}"/>
+                                </div>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-primary" type="button" onclick="getFilters()" th:text="#{filter.submit}">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="page-header">
+                        <h4 align="CENTER" th:text="${category.name}"></h4>
+                    </div>
+                </div>
+                <div id="products" th:each="product : ${products}">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <a th:href="@{'/product_info/' + ${product.id}}" th:text="${product.name}"></a>
+                                </div>
+                                <div class="col-lg-1 col-lg-offset-7">
+                                    <b th:text="${product.price + ' руб'}"></b>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <img th:src="@{'/resources/images/' + ${product.image}}" class="img-rounded"
+                                         alt="..."
+                                         style="height: 175px; width: 87px; display: block; margin-right: auto; margin-left: auto">
+                                </div>
+                                <div class="col-lg-9">
+                                    <p th:text="${product.description}"></p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-3 col-sm-2 col-sm-offset-6">
+                                    <a th:href="@{'/product_info/' + ${product.id}(review=true)}" class="btn btn-sm  btn-info">
+                                        <span class="glyphicon glyphicon-star"> </span><span th:text="#{reviews}">Reviews</span>
+                                    </a>
+                                </div>
+
+                                <div sec:authorize="${hasAuthority('USER')}">
+                                    <div class="col-xs-3 col-sm-2">
+                                        <div class="form-group">
+                                            <input class="form-control"
+                                                   placeholder="Количество"
+                                                   name="amount"
+                                                   th:id="'amount' + ${product.id}"
+                                                   min="1"
+                                                   value="1"
+                                                   type="number"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-1">
+                                        <div class="btn-group" role="group">
+                                            <div th:value="${product.id}" th:id="'productId' + ${product.id}"></div>
+                                            <button class="btn btn-primary" type="button"
+                                                    th:onclick="'addToCart(\'' + ${product.id} + '\');'" th:text="#{add}">
+                                                Add to cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div sec:authorize="${hasAuthority('ADMIN')}">
+                                    <div class="col-sm-1">
+                                        <div class="btn-group" role="group">
+                                            <div th:value="${product.id}" th:id="'productId' + ${product.id}"></div>
+                                            <a class="btn btn-default"
+                                               type="button"
+                                               th:href="@{'/admin/change-product/' + ${product.id} + '/'}" th:text="#{change}">
+                                                Change
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <nav aria-label="Page navigation" style="text-align: center;">
+                        <ul class="pagination" style="display: inline-block; float: none;">
+                            <li th:class="${currentPage eq 1} ? 'disabled' : ''">
+                                <a th:if="${not (currentPage eq 1)}"
+                                   th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
+                                   th:href="@{${currentUrl}(page=${currentPage - 1})}"
+                                   aria-label="Previous">
+                                    &laquo;
+                                </a>
+                                <a th:if="${currentPage eq 1}"
+                                   href="javascript:void(0);"
+                                   aria-label="Previous">
+                                    &laquo;
+                                </a>
+                            </li>
+
+                            <li th:each="current : ${#numbers.sequence(1, totalPage)}" th:class="${current eq currentPage} ? 'active' : ''">
+                            <a th:if="${currentPage eq current}" href="javascript:void(0);">
+                                <span th:text="${current}"></span>
+                            </a>
+                            <a th:if="${not (currentPage eq current)}"
+                               th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
+                               th:href="@{${currentUrl}(page=${current})}">
+                                <span th:text="${current}"></span>
+                            </a>
+
+                            </li>
+                            <li th:class="${currentPage eq totalPage} ? 'disabled' : ''">
+                                <a th:if="${not (currentPage eq totalPage)}"
+                                   th:with="currentUrl=(${@currentUrlWithoutParam.apply('page')})"
+                                   th:href="@{${currentUrl}(page=${currentPage + 1})}"
+                                   aria-label="Next">
+                                    &raquo;
+                                </a>
+                                <a th:if="${(currentPage eq totalPage)}" href="javascript:void(0);"
+                                   aria-label="Next">
+                                    &raquo;
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>

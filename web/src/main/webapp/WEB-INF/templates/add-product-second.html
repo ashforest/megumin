@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <title th:text="#{admin.add}"></title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <nav class="navbar navbar-default">
+            <div class="navContainer">
+                <div class="navbar-header">
+                    <div class="navbar-brand" th:text="#{admin.add}"></div>
+                    <div class="navbar-brand" th:text="#{admin.first}"></div>
+                    <div class="navbar-brand" th:text="#{admin.second}"></div>
+                </div>
+            </div>
+        </nav>
+
+        <div th:if="${category != null}">
+            <div class="container">
+                <div class="col-lg-5 col-lg-offset-3">
+                    <h3 th:text="#{add.category}"></h3>
+                    <form th:action="@{/admin/add-product/second}" method="post" th:object="${category}">
+                        <div class="form-group">
+                            <select th:field="*{id}" class="form-control">
+                                <option th:each="category : ${categories}" th:value="${category.id}"
+                                        th:text="${category.name}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" th:text="#{save}"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-lg-5 col-lg-offset-3">
+                <div th:if="${details}">
+                    <div th:each="detail : ${details}">
+                        <div class="form-group">
+                            <label th:text="${detail.name}"
+                                   th:for="detailValue">
+                            </label>
+
+                            <input class="myDetail form-control" type="text" th:name="${detail.name}" th:id="detailValue">
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-justified" role="group">
+                        <div class="btn-group" role="group">
+                            <button type="button" onclick="getDetail()">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>

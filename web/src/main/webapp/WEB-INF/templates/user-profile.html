@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">>
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{user.seeProfile}"></title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <div class="col-lg-5 col-lg-offset-3">
+            <div sec:authorize="${hasAuthority('USER')}">
+                <div th:if="${profile == null}">
+                    <p th:text="#{user.profileEmpty}"></p>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-primary" th:href="@{/user/create-profile}" th:text="#{user.fill}"></a>
+                    </div>
+                </div>
+            </div>
+            <div sec:authorize="${hasAuthority('ADMIN')}">
+                <div th:if="${profile == null}">
+                    <h4 th:text="#{user.adminEmpty}"></h4>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-primary" th:href="@{/admin/users/get-all}" th:text="#{back}"></a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div th:if="${profile != null}">
+                <h3 th:text="#{user.seeProfile}"></h3>
+                <table class="table table-bordered table-hover table-striped"
+                       style="margin-top: 40px">
+                    <tbody>
+                    <tr>
+                        <td th:text="#{address.city}"></td>
+                        <td th:text="${profile.address.city}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{address.street}"></td>
+                        <td th:text="${profile.address.street}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{address.house}"></td>
+                        <td th:text="${profile.address.house}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{address.flat}"></td>
+                        <td th:text="${profile.address.flat}"></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td th:text="${profile.email}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{address.phone}"></td>
+                        <td th:text="${profile.telephone}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="#{address.sex}"></td>
+                        <td th:text="${profile.gender eq 'MALE'} ? #{address.sexMan} : #{address.sexWoman}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div sec:authorize="${hasAuthority('USER')}">
+                    <div th:if="${profile != null}">
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-primary" th:href="@{/user/create-profile}" th:text="#{change}"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div sec:authorize="${hasAuthority('ADMIN')}">
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-primary" th:href="@{/admin/users/get-all}" th:text="#{back}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>

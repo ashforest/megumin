@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{success}">Success!</title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <div class="col-lg-4 col-lg-offset-3">
+            <div th:if="${profile == null}">
+                <h4 th:text="#{success}">Success!</h4>
+            </div>
+
+            <div th:if="${profile != null}">
+                <h3 th:text="#{successDetails}">Your order is successfully created.</h3>
+                <h4 th:text="#{address.will}"></h4>
+                <h4 th:text="#{address.city} + ' ' + ${profile.address.city}"></h4>
+                <h4 th:text="#{address.street} + ' ' + ${profile.address.street}"></h4>
+                <h4 th:text="#{address.house} + ' ' + ${profile.address.house}"></h4>
+                <h4 th:text="#{address.flat} + ' ' + ${profile.address.flat}"></h4>
+                <h4 th:text="#{address.phone} + ': ' + ${profile.telephone}"></h4>
+                <h4 th:text="'Email: ' + ${profile.email}"></h4>
+            </div>
+
+            <div class="btn-group" role="group">
+                <a class="btn btn-primary" th:href="@{/main_page}" th:text="#{main.to}"></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">>
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{user.orders}">Orders</title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <div sec:authorize="${hasAuthority('USER')}">
+            <div th:if="${empty}" class="col-lg-4 col-lg-offset-3">
+                <h3 th:text="#{user.noOrders}">You have no orders!</h3>
+            </div>
+        </div>
+
+        <div sec:authorize="${hasAuthority('ADMIN')}">
+            <div th:if="${empty}" class="col-lg-4 col -lg-offset-3">
+                <h4 th:text="#{user.empty}">User has no orders!</h4>
+                <div class="btn-group" role="group">
+                    <a class="btn btn-primary" th:href="@{/admin/users/get-all}" th:text="#{back}">Back</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:unless="${empty}">
+            <div th:each="order : ${orders}">
+                <div th:each="content : ${contents}">
+                    <div class="row" th:if="${order.id} == ${content[0].order.id}">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <div sec:authorize="${hasAuthority('USER')}">
+                                <div th:if="${empty}">
+                                    <h3 th:text="#{user.myOrders}">My orders</h3>
+                                </div>
+                            </div>
+
+                            <div sec:authorize="${hasAuthority('ADMIN')}">
+                                <div>
+                                    <h3 th:text="#{user.ordersOf} + ' ' + ${user.name} + ' ' + ${user.surname}"></h3>
+                                </div>
+                            </div>
+
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th colspan="2" th:text="#{user.order} + ' #' + ${order.id}"/>
+                                </tr>
+                                </thead>
+                                <thead>
+                                <tr>
+                                    <th th:text="#{product}">Product</th>
+                                    <th th:tel="#{quantity}">Quantity</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="cont : ${content}">
+                                    <td>
+                                        <a th:href="@{'/product_info/' + ${cont.product.id}}"
+                                           th:text="${cont.product.name}"></a>
+                                    </td>
+                                    <td th:text="${cont.amount}"/>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div sec:authorize="${hasAuthority('ADMIN')}">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-primary" th:href="@{/admin/users/get-all}" th:text="#{back}">Back</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>

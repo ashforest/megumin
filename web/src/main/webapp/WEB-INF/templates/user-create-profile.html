@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{user.profile}"></title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <div class="container">
+            <div class="col-lg-5 col-lg-offset-3">
+                <form th:action="@{/user/create-profile}" method="post" th:object="${profile}">
+                    <h3 align="CENTER" th:text="#{address.fill}"></h3>
+                    <div class="form-group">
+                        <label th:for="city" th:text="#{address.city}"></label>
+                        <input id="city" class="form-control" th:field="*{address.city}" type="text" required/>
+                    </div>
+                    <div class="form-group">
+                        <label th:for="street" th:text="#{address.street}"></label>
+                        <input class="form-control" th:field="*{address.street}" type="text" required/>
+                    </div>
+                    <div class="form-group">
+                        <label th:for="house" th:text="#{address.house}"></label>
+                        <input class="form-control" th:field="*{address.house}" type="text" required/>
+                    </div>
+                    <div class="form-group">
+                        <label th:for="flat" th:text="#{address.flat}"></label>
+                        <input class="form-control" th:field="*{address.flat}" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label th:for="telephone" th:text="#{address.phone}"></label>
+                        <input class="form-control" th:field="*{telephone}" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label th:for="email">Email</label>
+                        <input class="form-control" th:field="*{email}" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <select th:field="*{gender}" class="selectpicker">
+                            <option th:value="FEMALE" th:text="#{address.sexWoman}"></option>
+                            <option th:value="MALE" th:text="#{address.sexMan}"></option>
+                        </select>
+                    </div>
+
+                    <div class="btn-group btn-group-justified" role="group">
+                        <div class="btn-group" role="group">
+                            <button type="submit" class="btn btn-success" th:text="#{save}"></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>

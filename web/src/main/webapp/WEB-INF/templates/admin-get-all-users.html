@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{admin.users}"></title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th th:text="#{name}"></th>
+                <th th:text="#{surname}"></th>
+                <th th:text="#{login}"></th>
+                <th th:text="#{role}"></th>
+                <th th:text="#{user.seeProfile}"></th>
+                <th th:text="#{user.orders}"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="user : ${users}">
+                <td th:text="${user.name}"/>
+                <td th:text="${user.surname}"/>
+                <td th:text="${user.login}"/>
+                <td th:text="${user.role}"/>
+                <td>
+                    <a th:href="@{'/admin/users/see-profile/' + ${user.id}}" th:text="#{user.seeProfile}"></a>
+                </td>
+                <td>
+                    <a th:href="@{'/admin/users/all-orders/' + ${user.id}}" th:text="#{user.orders}"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>

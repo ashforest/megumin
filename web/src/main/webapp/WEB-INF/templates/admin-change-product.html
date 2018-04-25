@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{change}"></title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <div class="col-lg-5 col-lg-offset-3">
+            <div th:if="${optimisticLock}">
+                <label class="label-red" th:text="#{saveError}"></label>
+            </div>
+            <form th:action="@{'/admin/change-product/' + ${product.id}}" method="post" th:object="${product}">
+                <div class="form-group">
+                    <label th:text="#{add.name}" th:for="name"></label>
+                    <input class="form-control" th:placeholder="#{add.name}" th:field="*{name}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label th:text="#{add.description}" th:for="description"></label>
+                    <input class="form-control" th:placeholder="#{add.description}" th:field="*{description}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label th:text="#{add.price}" th:for="price"></label>
+                    <input class="form-control" th:placeholder="#{add.price}" th:field="*{price}" type="text"/>
+                </div>
+                <input th:field="*{id}" th:value="${product.id}" type="hidden"/>
+                <input th:field="*{version}" th:value="${product.version}" type="hidden"/>
+                <input th:field="*{image}" th:value="${product.image}" type="hidden"/>
+                <input th:field="*{mark}" th:value="${product.mark}" type="hidden"/>
+                <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group" role="group">
+                        <button type="submit" class="btn btn-success" th:text="#{save}"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</body>

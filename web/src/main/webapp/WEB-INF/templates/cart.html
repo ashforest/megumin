@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{cart}">Cart</title>
+    <div th:insert="~{fragments :: connect}"/>
+</head>
+<body class="lightRed">
+<div th:insert="~{fragments :: header}"></div>
+<div class="myContent">
+    <div class="productContent">
+
+        <div th:insert="~{fragments :: navbar-default}"></div>
+
+        <div th:if="${empty}">
+            <h3 th:text="#{cart.empty}">Your cart is empty!</h3>
+        </div>
+
+        <div th:unless="${empty}">
+            <div class="container-fluid">
+                <div class="row" th:object="${carts}">
+                    <div th:each="cart : ${carts}">
+                        <div class="col-lg-6 col-lg-offset-1 cart-content">
+                            <div class="row">
+                                <div class="col-lg-6 left">
+                                    <p th:text="${cart.product.name} + ' x ' + ${cart.amount}"></p>
+                                </div>
+                                <div class="col-lg-1 col-lg-offset-5">
+                                    <p class="right" th:text="${cart.product.price} + ' руб'"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <img th:src="@{'/resources/images/' + ${cart.product.image}}" class="cart-img">
+                                </div>
+                                <div class="col-lg-3 col-lg-offset-7">
+                                    <div class="col lg-12" style="margin-top: 20px">
+                                        <div class="row">
+                                            <select size="1" name="amount" th:id="'amount' + ${cart.product.id}"
+                                                    style="width: 160px">
+                                                <option th:each="i : ${#numbers.sequence(1, cart.amount)}"
+                                                        th:value="${i}"
+                                                        th:text="${i}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div th:value="${cart.product.id}"
+                                                 th:id="'productId' + ${cart.product.id}"></div>
+                                            <button th:onclick="'deleteFromCart(\'' + ${cart.product.id} + '\');'"
+                                                    class="btn btn-danger btn-sm" style="margin-top: 5px; width: 160px">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                                <span th:text="#{cart.delete}">Delete from cart</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-lg-1 col-lg-offset-4"></div>
+                    <a th:href="@{/user/create-order}" class="btn btn-success"><span
+                            class="glyphicon glyphicon-shopping-cart"></span> <span th:text="#{cart.checkout}">Checkout</span></a>
+                    <a th:href="@{/user/cart/clean}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> <span th:text="#{cart.clear}">Clear the whole cart</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>

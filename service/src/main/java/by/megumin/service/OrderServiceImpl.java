@@ -3,6 +3,7 @@ package by.megumin.service;
 import by.megumin.dao.OrderContentDao;
 import by.megumin.dao.OrderDao;
 import by.megumin.dao.OrderDetailDao;
+import by.megumin.dao.PaymentDetailsDao;
 import by.megumin.dao.common.BaseDao;
 import by.megumin.entity.orderEntity.*;
 import by.megumin.entity.userEntity.User;
@@ -31,13 +32,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     @Autowired
     private OrderContentDao orderContentDao;
 
+    @Autowired
+    private PaymentDetailsDao paymentDetailsDao;
+
     @Override
     public List<Order> getByUser(User owner) {
         return orderDao.getByUser(owner);
     }
 
     @Override
-    public Order createOrder(User user) {
+    public Order createOrder(User user, PaymentDetails paymentDetails) {
         List<Cart> carts = cartService.getByUser(user);
         OrderDetail orderDetail = new OrderDetail(LocalDateTime.now(), null);
         orderDetailDao.save(orderDetail);
@@ -46,11 +50,22 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
         order.setStatus(OrderStatus.FORMED);
         order.setDetail(orderDetail);
         orderDao.save(order);
+
+        if (paymentDetails.getPaymentType() == PaymentType.ONE_TIME) {
+            paymentDetails = new PaymentDetails();
+            paymentDetails.setPaymentType(PaymentType.ONE_TIME);
+        } else {
+            paymentDetails.setInterestRate(getInterestRate(paymentDetails));
+        }
+
+        paymentDetailsDao.save(paymentDetails);
+        final PaymentDetails pd = paymentDetails;
+
         List<OrderContent> contents = carts
                 .stream()
-                .map(c -> new OrderContent(c.getProduct(), c.getAmount(), order))
+                .map(c -> new OrderContent(c.getProduct(), c.getAmount(), pd, order))
                 .collect(Collectors.toList());
-        contents.stream().forEach(c -> orderContentDao.save(c));
+        contents.forEach(c -> orderContentDao.save(c));
         cartService.cleanByUser(user);
         return order;
     }
@@ -58,5 +73,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
     @Override
     protected BaseDao<Order> getDao() {
         return orderDao;
+    }
+
+    private double getInterestRate(PaymentDetails paymentDetails) {
+        switch (paymentDetails.getRepaymentMonthTerm()) {
+            case 2:
+                return 0;
+            case 4:
+                return 3;
+            case 6:
+                return 5;
+            default:
+                throw new IllegalArgumentException("Not possible term");
+        }
     }
 }

@@ -3,7 +3,6 @@ package by.megumin.entity.orderEntity;
 import by.megumin.entity.otherEntity.BaseEntity;
 import by.megumin.entity.productEntity.Product;
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 
@@ -22,6 +21,10 @@ public class OrderContent extends BaseEntity {
 
     @Column(name = "amount")
     private Integer amount;
+
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinColumn(name = "payment_details_id")
+    private PaymentDetails paymentDetails;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")

@@ -64,6 +64,7 @@ public class DatabaseConfig {
 
     @Bean
     public Properties hibernateProperties() {
+        System.out.println("**************************" + creationPolicy + "*****************************");
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", dialect);
         properties.setProperty("hibernate.show_sql", showSql);

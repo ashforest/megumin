@@ -2,8 +2,9 @@ package by.megumin.controller;
 
 import by.megumin.entity.orderEntity.Order;
 import by.megumin.entity.orderEntity.OrderContent;
+import by.megumin.entity.orderEntity.PaymentDetails;
+import by.megumin.entity.orderEntity.PaymentType;
 import by.megumin.entity.productEntity.Category;
-import by.megumin.entity.productEntity.Product;
 import by.megumin.entity.userEntity.Profile;
 import by.megumin.entity.userEntity.User;
 import by.megumin.service.*;
@@ -56,14 +57,15 @@ public class UserController {
     }
 
     @GetMapping("/create-order")
-    public String addOrder(Model model) {
+    public String addOrder(@RequestParam Integer term, @RequestParam String plan, Model model) {
         String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getByLogin(userLogin);
         Profile profile = profileService.getByUser(user);
-        if(profile != null) {
+        if (profile != null) {
             model.addAttribute("profile", profile);
         }
-        orderService.createOrder(user);
+        PaymentType paymentType = PaymentType.valueOf(plan);
+        orderService.createOrder(user, new PaymentDetails(paymentType, term));
         return "order-success";
     }
 
@@ -72,11 +74,11 @@ public class UserController {
         String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getByLogin(userLogin);
         List<Order> orders = orderService.getByUser(user);
-        if(orders.size() == 0){
+        if (orders.size() == 0) {
             model.addAttribute("empty", true);
         } else {
             List<List<OrderContent>> contents = new ArrayList<>();
-            for(Order order : orders) {
+            for (Order order : orders) {
                 contents.add(orderContentService.getByOrder(order));
             }
             model.addAttribute("contents", contents);
@@ -111,7 +113,7 @@ public class UserController {
         User user = userService.getByLogin(userLogin);
         profile.setUser(user);
         Profile currentProfile = profileService.getByUser(user);
-        if(currentProfile != null) {
+        if (currentProfile != null) {
             profile.setId(currentProfile.getId());
             profileService.update(profile);
         } else {
